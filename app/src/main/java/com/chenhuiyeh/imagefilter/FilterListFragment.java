@@ -73,7 +73,10 @@ public class FilterListFragment extends Fragment implements FilterListFragmentLi
             public void run() {
                 Bitmap thumbImg;
                 if (bmp == null) {
-                    thumbImg = BitmapUtils.getBitmapFromAssets(getActivity(),MainActivity.PICTURE_NAME, 100, 100 );
+                    thumbImg = BitmapUtils
+                            .getBitmapFromAssets(
+                                    getActivity(),MainActivity.PICTURE_NAME,
+                                    100, 100 );
                 } else {
                     thumbImg = Bitmap.createScaledBitmap(bmp, 100, 100, false);
                 }

@@ -6,4 +6,5 @@
 
     <color name="selected_filter">#221f20</color>
     <color name="normal_filter">#8a8889</color>
+    <color name="color_option_menu">#FF3990</color>
 </resources>

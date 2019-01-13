@@ -20,7 +20,9 @@ public class EditImageFragment extends Fragment implements SeekBar.OnSeekBarChan
         // Required empty public constructor
     }
 
-
+    public void setListener(EditImageFragmentListener listener) {
+        this.listener = listener;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

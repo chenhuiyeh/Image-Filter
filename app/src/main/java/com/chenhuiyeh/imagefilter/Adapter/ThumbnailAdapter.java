@@ -17,13 +17,13 @@ import com.zomato.photofilters.utils.ThumbnailItem;
 import java.util.List;
 
 public class ThumbnailAdapter extends RecyclerView.Adapter<ThumbnailAdapter.MyViewHolder> {
-    private List<ThumbnailItem> thumbnilItems;
+    private List<ThumbnailItem> thumbnailItems;
     private FilterListFragmentListener listener;
     private Context context;
     private int selectedIndex = 0;
 
      public ThumbnailAdapter(List<ThumbnailItem> thumbnailItems, FilterListFragmentListener listener, Context context) {
-         this.thumbnilItems = thumbnailItems;
+         this.thumbnailItems = thumbnailItems;
          this.listener = listener;
          this.context = context;
      }
@@ -36,7 +36,7 @@ public class ThumbnailAdapter extends RecyclerView.Adapter<ThumbnailAdapter.MyVi
 
     @Override
     public void onBindViewHolder(@NonNull ThumbnailAdapter.MyViewHolder holder, final int position) {
-        final ThumbnailItem thumbnailItem = thumbnilItems.get(position);
+        final ThumbnailItem thumbnailItem = thumbnailItems.get(position);
         holder.thumbnail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -57,7 +57,7 @@ public class ThumbnailAdapter extends RecyclerView.Adapter<ThumbnailAdapter.MyVi
 
     @Override
     public int getItemCount() {
-        return thumbnilItems==null? 0:thumbnilItems.size();
+        return thumbnailItems ==null? 0: thumbnailItems.size();
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {

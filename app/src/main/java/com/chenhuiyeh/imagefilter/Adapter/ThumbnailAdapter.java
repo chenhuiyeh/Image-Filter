@@ -37,6 +37,7 @@ public class ThumbnailAdapter extends RecyclerView.Adapter<ThumbnailAdapter.MyVi
     @Override
     public void onBindViewHolder(@NonNull ThumbnailAdapter.MyViewHolder holder, final int position) {
         final ThumbnailItem thumbnailItem = thumbnailItems.get(position);
+        holder.thumbnail.setImageBitmap(thumbnailItem.image);
         holder.thumbnail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

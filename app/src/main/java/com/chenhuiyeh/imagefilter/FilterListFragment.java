@@ -72,7 +72,7 @@ public class FilterListFragment extends Fragment implements FilterListFragmentLi
             @Override
             public void run() {
                 Bitmap thumbImg;
-                if (bmp == null) {
+                if (bmp == null) { // default image
                     thumbImg = BitmapUtils
                             .getBitmapFromAssets(
                                     getActivity(),MainActivity.PICTURE_NAME,

@@ -15,7 +15,7 @@
 
     <ImageView
         android:id="@+id/thumbnail"
-        android:scaleType="centerCrop"
+        android:scaleType="center"
         android:adjustViewBounds="true"
         android:layout_width="80dp"
         android:layout_height="80dp" />

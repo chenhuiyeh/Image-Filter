@@ -9,7 +9,7 @@ An image filtering Android app
 
 ![alt text](https://github.com/chenhuiyeh/Image-Filter/blob/master/demo/filters-fragment.png)
 
-## Author
-Tiffany yeh
+## Special Thanks
+EDMT Dev
 
 

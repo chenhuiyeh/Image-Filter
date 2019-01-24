@@ -10,8 +10,8 @@ An image filtering Android app
 ![alt text](https://github.com/chenhuiyeh/Image-Filter/blob/master/demo/filters-fragment.png)
 
 ## Libraries Used
-Filter Pack: https://github.com/emonm/AndroidPhotoFilters
-Permission Handling: https://github.com/Karumi/Dexter
+- Filter Pack: https://github.com/emonm/AndroidPhotoFilters
+- Permission Handling: https://github.com/Karumi/Dexter
 
 ## Special Thanks
 EDMT Dev

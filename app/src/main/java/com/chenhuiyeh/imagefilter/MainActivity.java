@@ -20,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.chenhuiyeh.imagefilter.Adapter.ViewPagerAdapter;
+import com.chenhuiyeh.imagefilter.Interfaces.AddTextFragmentListner;
 import com.chenhuiyeh.imagefilter.Interfaces.BrushFragmentListener;
 import com.chenhuiyeh.imagefilter.Interfaces.EditImageFragmentListener;
 import com.chenhuiyeh.imagefilter.Interfaces.FilterListFragmentListener;
@@ -39,7 +40,9 @@ import java.util.List;
 import ja.burhanrashid52.photoeditor.PhotoEditor;
 import ja.burhanrashid52.photoeditor.PhotoEditorView;
 
-public class MainActivity extends AppCompatActivity implements FilterListFragmentListener, EditImageFragmentListener, BrushFragmentListener {
+public class MainActivity extends AppCompatActivity implements FilterListFragmentListener,
+        EditImageFragmentListener,
+        BrushFragmentListener, AddTextFragmentListner {
 
     public static final String PICTURE_NAME = "flash.jpg";
     public static final int PERMISSION_PICK_IMAGE = 1000;
@@ -53,8 +56,7 @@ public class MainActivity extends AppCompatActivity implements FilterListFragmen
     FilterListFragment mFilterListFragment;
     EditImageFragment mEditImageFragment;
 
-    CardView btn_edit;
-    CardView btn_filter_list, btn_brush;
+    CardView btn_edit, btn_filter_list, btn_brush, btn_text;
     int brightnessFinal = 0;
     float saturationFinal = 1.0f;
     float contrastFinal = 1.0f;
@@ -84,6 +86,7 @@ public class MainActivity extends AppCompatActivity implements FilterListFragmen
         btn_edit = (CardView) findViewById(R.id.btn_edit);
         btn_filter_list = (CardView) findViewById(R.id.btn_filters_list);
         btn_brush = (CardView) findViewById(R.id.btn_brush);
+        btn_text = (CardView) findViewById(R.id.btn_text);
         btn_filter_list.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -110,6 +113,15 @@ public class MainActivity extends AppCompatActivity implements FilterListFragmen
                 BrushFragment brushFragment = BrushFragment.getInstance();
                 brushFragment.setBrushFragmentListener(MainActivity.this);
                 brushFragment.show(getSupportFragmentManager(), brushFragment.getTag());
+            }
+        });
+
+        btn_text.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AddTextFragment addTextFragment = AddTextFragment.getInstance();
+                addTextFragment.setListener(MainActivity.this);
+                addTextFragment.show(getSupportFragmentManager(), addTextFragment.getTag());
             }
         });
         loadImage();
@@ -326,6 +338,11 @@ public class MainActivity extends AppCompatActivity implements FilterListFragmen
             photoEditor.brushEraser();
         else
             photoEditor.setBrushDrawingMode(true);
+    }
+
+    @Override
+    public void onAddTextButtonClick(String text, int color) {
+        photoEditor.addText(text, color);
     }
 }
 

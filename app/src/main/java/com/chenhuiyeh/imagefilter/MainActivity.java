@@ -10,6 +10,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Menu;
@@ -19,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.chenhuiyeh.imagefilter.Adapter.ViewPagerAdapter;
+import com.chenhuiyeh.imagefilter.Interfaces.BrushFragmentListener;
 import com.chenhuiyeh.imagefilter.Interfaces.EditImageFragmentListener;
 import com.chenhuiyeh.imagefilter.Interfaces.FilterListFragmentListener;
 import com.chenhuiyeh.imagefilter.Utils.BitmapUtils;
@@ -34,14 +36,16 @@ import com.zomato.photofilters.imageprocessors.subfilters.SaturationSubfilter;
 
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements FilterListFragmentListener, EditImageFragmentListener {
+import ja.burhanrashid52.photoeditor.PhotoEditor;
+import ja.burhanrashid52.photoeditor.PhotoEditorView;
+
+public class MainActivity extends AppCompatActivity implements FilterListFragmentListener, EditImageFragmentListener, BrushFragmentListener {
 
     public static final String PICTURE_NAME = "flash.jpg";
     public static final int PERMISSION_PICK_IMAGE = 1000;
 
-    ImageView img_preview;
-    TabLayout tab_layout;
-    ViewPager view_pager;
+    PhotoEditorView photoEditorView;
+    PhotoEditor photoEditor;
     CoordinatorLayout coordinator_layout;
 
     Bitmap originalBmp, filteredBmp, finalBmp;
@@ -49,6 +53,8 @@ public class MainActivity extends AppCompatActivity implements FilterListFragmen
     FilterListFragment mFilterListFragment;
     EditImageFragment mEditImageFragment;
 
+    CardView btn_edit;
+    CardView btn_filter_list, btn_brush;
     int brightnessFinal = 0;
     float saturationFinal = 1.0f;
     float contrastFinal = 1.0f;
@@ -69,22 +75,52 @@ public class MainActivity extends AppCompatActivity implements FilterListFragmen
         getSupportActionBar().setTitle("Image Filter");
 
         // Views
-        img_preview = findViewById(R.id.image_preview);
-        tab_layout = findViewById(R.id.tabs);
-        view_pager = findViewById(R.id.viewpager);
+        photoEditorView = (PhotoEditorView) findViewById(R.id.image_preview);
+        photoEditor = new PhotoEditor.Builder(this, photoEditorView)
+                .setPinchTextScalable(true)
+                .build();
         coordinator_layout = findViewById(R.id.coordinator);
 
-        loadImage();
-        setUpViewPager(view_pager);
+        btn_edit = (CardView) findViewById(R.id.btn_edit);
+        btn_filter_list = (CardView) findViewById(R.id.btn_filters_list);
+        btn_brush = (CardView) findViewById(R.id.btn_brush);
+        btn_filter_list.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FilterListFragment filterListFragment = FilterListFragment.getInstance();
+                filterListFragment.setListener(MainActivity.this);
+                filterListFragment.show(getSupportFragmentManager(), filterListFragment.getTag());
+            }
+        });
 
-        tab_layout.setupWithViewPager(view_pager);
+        btn_edit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EditImageFragment editImageFragment = EditImageFragment.getInstance();
+                editImageFragment.setListener(MainActivity.this);
+                editImageFragment.show(getSupportFragmentManager(), editImageFragment.getTag());
+            }
+        });
+
+        btn_brush.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // enable brush mode
+                photoEditor.setBrushDrawingMode(true);
+                BrushFragment brushFragment = BrushFragment.getInstance();
+                brushFragment.setBrushFragmentListener(MainActivity.this);
+                brushFragment.show(getSupportFragmentManager(), brushFragment.getTag());
+            }
+        });
+        loadImage();
+
     }
 
     private void loadImage() {
         originalBmp = BitmapUtils.getBitmapFromAssets(this, PICTURE_NAME, 300, 300);
         filteredBmp = originalBmp.copy(Bitmap.Config.ARGB_8888, true);
         finalBmp = originalBmp.copy(Bitmap.Config.ARGB_8888, true);
-        img_preview.setImageBitmap(originalBmp);
+        photoEditorView.getSource().setImageBitmap(originalBmp);
     }
 
     private void setUpViewPager(ViewPager view_pager) {
@@ -115,7 +151,7 @@ public class MainActivity extends AppCompatActivity implements FilterListFragmen
         brightnessFinal = val;
         Filter filter = new Filter();
         filter.addSubFilter(new BrightnessSubFilter(val));
-        img_preview.setImageBitmap(filter.processFilter(finalBmp.copy(Bitmap.Config.ARGB_8888, true)));
+        photoEditorView.getSource().setImageBitmap(filter.processFilter(finalBmp.copy(Bitmap.Config.ARGB_8888, true)));
     }
 
     @Override
@@ -123,7 +159,7 @@ public class MainActivity extends AppCompatActivity implements FilterListFragmen
         saturationFinal = val;
         Filter filter = new Filter();
         filter.addSubFilter(new SaturationSubfilter(val));
-        img_preview.setImageBitmap(filter.processFilter(finalBmp.copy(Bitmap.Config.ARGB_8888, true)));
+        photoEditorView.getSource().setImageBitmap(filter.processFilter(finalBmp.copy(Bitmap.Config.ARGB_8888, true)));
 
     }
 
@@ -132,7 +168,7 @@ public class MainActivity extends AppCompatActivity implements FilterListFragmen
         contrastFinal = val;
         Filter filter = new Filter();
         filter.addSubFilter(new ContrastSubFilter(val));
-        img_preview.setImageBitmap(filter.processFilter(finalBmp.copy(Bitmap.Config.ARGB_8888, true)));
+        photoEditorView.getSource().setImageBitmap(filter.processFilter(finalBmp.copy(Bitmap.Config.ARGB_8888, true)));
     }
 
     @Override
@@ -156,7 +192,7 @@ public class MainActivity extends AppCompatActivity implements FilterListFragmen
     public void onFilterSelected(Filter filter) {
         resetControl();
         filteredBmp = originalBmp.copy(Bitmap.Config.ARGB_8888, true);
-        img_preview.setImageBitmap(filter.processFilter(filteredBmp));
+        photoEditorView.getSource().setImageBitmap(filter.processFilter(filteredBmp));
         finalBmp = filteredBmp.copy(Bitmap.Config.ARGB_8888, true);
 
     }
@@ -267,6 +303,29 @@ public class MainActivity extends AppCompatActivity implements FilterListFragmen
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public void onBrushSizeChangedListener(float size) {
+        photoEditor.setBrushSize(size);
+    }
+
+    @Override
+    public void onBrushOpacityChangedListener(int opacity) {
+        photoEditor.setOpacity(opacity);
+    }
+
+    @Override
+    public void onBrushColorChangedListener(int color) {
+        photoEditor.setBrushColor(color);
+    }
+
+    @Override
+    public void onBrushStateChangedListener(boolean isEraser) {
+        if (isEraser)
+            photoEditor.brushEraser();
+        else
+            photoEditor.setBrushDrawingMode(true);
     }
 }
 

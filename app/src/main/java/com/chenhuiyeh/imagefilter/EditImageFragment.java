@@ -3,6 +3,7 @@ package com.chenhuiyeh.imagefilter;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.BottomSheetDialogFragment;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,10 +12,18 @@ import android.widget.SeekBar;
 
 import com.chenhuiyeh.imagefilter.Interfaces.EditImageFragmentListener;
 
-public class EditImageFragment extends Fragment implements SeekBar.OnSeekBarChangeListener{
+public class EditImageFragment extends BottomSheetDialogFragment implements SeekBar.OnSeekBarChangeListener{
 
     private EditImageFragmentListener listener;
     SeekBar seekbar_brightness, seekbar_contrast, seekbar_saturation;
+
+    static EditImageFragment instance;
+
+    public static EditImageFragment getInstance() {
+        if (instance == null)
+            instance  = new EditImageFragment();
+        return instance;
+    }
 
     public EditImageFragment() {
         // Required empty public constructor
